@@ -3,6 +3,7 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        {% block currentstyle %}{% endblock %}
     </head>
     <body>
         <div class="wb-main">
@@ -10,29 +11,30 @@
             <div class="wb-base-top-bar">
                 <div style="display:flex;">
                     <div style="flex:1"></div>
-                    <div style="font-size:2em; line-height: 100px">DJANGO WORKBENCH</div>
+                    <div class="wb-base-title">DJANGO WORKBENCH</div>
                     <div style="flex:1"></div>
                 </div>
             </div>
             <!-- BODY -->
-            <div style="flex:1;">
-                <div>
-                    <!-- MENU -->
-                    <div class="web-base-menu-bar">
-                        <a href="http://google.com"><span>INGREDIENTS</span></a> |
-                        <a href="http://google.com"></a><span>RECIPES</span></a> |
-                        <a href="http://google.com"></a><span>WORKBENCHES</span></a> |
-                        <a href="http://google.com"></a><span>CRAFT</span></a>                        
+            <div class="wb-base-body">
+                <!-- MENU -->
+                <div class="web-base-menu-bar">
+                    <div style="margin-left:8px;">
+                        <a href="/workbench/"><span>HOME</span></a> |
+                        <a href="/workbench/ingredients"><span>INGREDIENTS</span></a> |
+                        <a href="/workbench/recipes"><span>RECIPES</span></a> |
+                        <a href="/workbench/workbenches"><span>WORKBENCHES</span></a> |
+                        <a href="/workbench/craft"><span>CRAFT</span></a>                              
                     </div>
-                    <!-- CONTENT -->
-                    <div>
-                        {% block content %}{% endblock %}
-                    </div>                    
                 </div>
+                <!-- CONTENT -->
+                <div class="wb-base-body-content">
+                    {% block content %}{% endblock %}
+                </div>                    
             </div>
             <!-- BOTTOM / FOOTER -->
             <div class="wb-base-bottom-bar">
-                DJANGO WORKBENCH
+                COPYRIGHT © 2019 DJANGO WORKBENCH
             </div>
         </div>
     </body>

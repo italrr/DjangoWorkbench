@@ -1,0 +1,27 @@
+
+.wb-ing-main { 
+    width:100%;
+    height: 100%;
+    display: flex;
+}
+
+.wb-ing-left-bar {
+    flex: 0.25;
+    border-right: 1px solid black;
+}
+
+.wb-ing-right-bar {
+    flex: 0.75;
+}
+
+.wb-ing-section-title {
+    display:flex;
+    width:100%;
+    line-height:80px;
+    font-size:1.2em;
+}
+
+.wb-ing-inner-section {
+    width: 100%;
+    display: flex;
+}

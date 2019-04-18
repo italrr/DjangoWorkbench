@@ -1,0 +1,40 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block title %}Django Workbench Ingredients{% endblock %}
+
+{% block currentstyle %}
+    <link rel="stylesheet" href="{% static 'css/ingredients.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="wb-ing-main">
+        <!-- ADD RECIPE SECTION -->
+        <div class="wb-ing-left-bar">
+            <!-- SECTION TITLE -->
+            <div class="wb-ing-section-title">
+                <div style="flex:1;"></div>
+                <span>CREATE INGREDIENT</span>
+                <div style="flex:1;"></div>
+            </div>
+            <div class="wb-ing-inner-section">
+                <div style="flex:1;"></div>
+                {% include "ingredients/create.html" %}
+                <div style="flex:1;"></div>
+            </div>
+        </div>
+        <!-- RECIPE LIST SECTION -->
+        <div class="wb-ing-right-bar">
+            <!-- SECTION TITLE -->
+            <div class="wb-ing-section-title">
+                <div style="flex:1;"></div>
+                <span>INGREDIENTS</span>
+                <div style="flex:1;"></div>
+            </div>
+            <div class="wb-ing-inner-section">
+                <div style="flex:1;"></div>
+                {% include "ingredients/list.html" %}
+                <div style="flex:1;"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
