@@ -3,7 +3,9 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <script src="{% static 'js/grid.js' %}"></script>
         {% block currentstyle %}{% endblock %}
+        {% block currentscript %}{% endblock %}
     </head>
     <body>
         <div class="wb-main">

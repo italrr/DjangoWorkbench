@@ -1,7 +1,9 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
+from django.core import serializers
+import json
 
-from .models import Ingredient
+from .models import Ingredient, RecipeIngredient, Recipe
 
 from .forms import IngredientCreateForm, IngredientDeleteForm
 
@@ -28,8 +30,10 @@ def ViewIngredients(request):
 
     return render(request, 'ingredients/ingredients.html', context)
 
+def GetAllIngredients(request):
+    return JsonResponse(list(Ingredient.objects.all().values()), safe=False)
+
 def DeleteIngredients(request):
-    print(request)
     if request.method == 'POST':
         form = IngredientDeleteForm(request.POST)
         if form.is_valid():
@@ -39,3 +43,17 @@ def DeleteIngredients(request):
 # RECIPES
 def ViewRecipes(request):
     return render(request, 'recipes/recipes.html')
+
+def CreateRecipe(request):
+    obj = json.loads(request.body.decode('utf-8'))
+    recipe = obj['recipe']['formula']
+    total = obj['recipe']['total']
+
+    for i in range(len(recipe)):
+        slot = recipe[i]
+        recipeIng = RecipeIngredient(ingredient=slot.id, dist=slot.dist)
+        recipeIng.save()
+
+
+
+    return HttpResponse("SUCCESS!")

@@ -7,3 +7,12 @@ class Ingredient(models.Model):
 class IngredientInventory(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
+
+class RecipeIngredient(models.Model):
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    dist = models.IntegerField(default=0)
+
+class Recipe(models.Model):
+    name = models.CharField(max_length=100)
+    total = models.IntegerField(default=0)
+    recipeIngredients = models.ForeignKey(RecipeIngredient, on_delete=models.CASCADE)

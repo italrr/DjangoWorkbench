@@ -8,6 +8,33 @@
 
 {% block content %}
     <div class="wb-reci-main">
-        quak
+        <!-- ADD RECIPE SECTION -->
+        <div class="wb-reci-left-bar">
+            <!-- SECTION TITLE -->
+            <div class="wb-reci-section-title">
+                <div style="flex:1;"></div>
+                <span>Create Recipe</span>
+                <div style="flex:1;"></div>
+            </div>
+            <div class="wb-reci-inner-section">
+                <div style="flex:1;"></div>
+                {% include "recipes/create.html" %}
+                <div style="flex:1;"></div>
+            </div>
+        </div>
+        <!-- RECIPE LIST SECTION -->
+        <div class="wb-reci-right-bar">
+            <!-- SECTION TITLE -->
+            <div class="wb-reci-section-title">
+                <div style="flex:1;"></div>
+                <span>Recipes</span>
+                <div style="flex:1;"></div>
+            </div>
+            <div class="wb-reci-inner-section">
+                <div style="flex:1;"></div>
+                {% include "ingredients/list.html" %}
+                <div style="flex:1;"></div>
+            </div>
+        </div>
     </div>
 {% endblock %}

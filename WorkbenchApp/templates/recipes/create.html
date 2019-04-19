@@ -1,0 +1,118 @@
+
+{% block currentscript %}
+    <script>
+
+
+        /*
+            Because of the complex nature of this widget, I'll be doing
+            some stuff directly with javascript throughout this view
+        */
+
+        // dirty fix to wait for dom...
+        // can be better
+        const grid = buildGrid(4, 4, 72);
+        setTimeout(function(dwidth, dheight){
+            const div = document.getElementById('RecipeCreateLeftBar')
+            grid.attach(div);
+            grid.init();
+            grid.setFontSize("0.55em");
+        }, 100);
+
+        // fetch ingredients and populate list
+        function fetchIngredients(){
+            const http = new XMLHttpRequest();
+            http.open("GET", '/workbench/ingredients/getAll');
+            http.send();
+            http.onreadystatechange=(e)=>{
+                const select = document.getElementById('RecipeCreateIngredient');                
+                json = JSON.parse(http.responseText);
+                if(!select || !json){
+                    console.log("No ingredients")
+                    return;
+                }
+                for(let i = 0; i < json.length; ++i){
+                    select.options[i] = new Option(json[i].name, json[i].id);
+                } 
+                grid.setSelector(json[0].name, json[0].id);
+            }
+        }
+
+        function onClear(){
+            grid.clear();
+        }
+
+        // Since we're by-passing django's forms to make this post request
+        // we'll be getting manually the csrftoken from the cookies 
+        function getCSRFToken() {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i];
+                    if (cookie.substring(0, 10) == ('csrftoken' + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(10));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function onCreate(){
+            const formula = grid.getCurrentFormula();
+            const getName = document.getElementById('RecipeCreateTitle');
+            const messageSuccess = document.getElementById('RecipeCreateMessageSuccess');
+            const messageFailure = document.getElementById('RecipeCreateMessageError');
+            console.log(document.cookie)
+            if(!getName.value || getName.value.length < 1){
+                messageFailure.innerHTML = "Name is too short (>=1)";
+                return;
+            }
+            if(formula.total == 0){
+                messageFailure.innerHTML = "Recipe cannot be empty";
+                return;
+            }
+            
+            const http = new XMLHttpRequest();
+            http.open("POST", '/workbench/recipes/create');
+            http.setRequestHeader("X-CSRFToken", getCSRFToken());
+            http.send(JSON.stringify({name: name.innerHTML, recipe: formula}));
+            http.onreadystatechange=(e)=>{
+                messageSuccess.innerHTML = "Success!";
+            }
+        }
+
+        function onIngredientChange(){
+            const select = document.getElementById('RecipeCreateIngredient');
+            grid.setSelector(select.options[select.options.selectedIndex].innerHTML, select.value);
+
+            
+        }
+
+        fetchIngredients();
+
+    </script>
+{% endblock %}
+
+<div>
+    <!-- TOP BAR -->
+    <div class="wb-reci-create-topbar">
+        <div>
+            <div>Name</div>
+            <input id="RecipeCreateTitle" type="text" name="name">
+        </div>
+        <div style="margin-top:3px;">
+            <div>Ingredient</div>
+            <select onchange="onIngredientChange()" id="RecipeCreateIngredient"></select>
+        </div>        
+        <div class="wb-reci-create-topbar-buttons">
+            <div style="flex:1;"></div>
+            <button onclick="onCreate()">Create</button>
+            <button onclick="onClear()">Clear</button>
+        </div>
+    </div>
+    <!-- GRID -->
+    <div id="RecipeCreateLeftBar"></div>
+    <div class="wb-reci-success-msg" id="RecipeCreateMessageSuccess"></div>
+    <div class="wb-reci-failure-msg" id="RecipeCreateMessageError"></div>
+</div>
