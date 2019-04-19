@@ -1,9 +1,19 @@
 
-<div>
-    <form action="/your-name/" method="post">
+<div class="wb-ing-create-body">
+    <form  action="/workbench/ingredients/" method="post">
         
-        
+        <div class="wb-ing-create-form">
+            {% csrf_token %}
+            {{ create_form }}
+        </div>
 
-        <input type="submit" value="CREATE">
+        <input type="submit" value="Create">
+
+        {% if 'created' in request.GET %}
+        <div class="wb-ing-success-msg">
+            Success!
+        </div>
+        {% endif %}
+
     </form>
 </div>

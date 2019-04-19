@@ -1,3 +1,36 @@
+
 <div>
-    list
+    <div style="margin-bottom:8px;">
+        {% if 'removed' in request.GET %}
+        <div class="wb-ing-success-msg">
+            Removed!
+        </div>
+        {% endif %}             
+    </div>
+    <div>
+        <table class="wb-ing-table">                
+            <tr>
+                <th>Display Name</th>
+                <th>Type</th> 
+                <th>Action</th>
+            </tr>            
+            {% for ingredient in list %}
+            <tr>
+                <td><span>{{ ingredient.name }}</span></td>
+                <td> <span>{{ ingredient.type }}</span></td> 
+                <td>
+                    <div style="margin:2em;">
+                        <form action="/workbench/ingredients/delete" method="post">
+                            {% csrf_token %}                   
+                            <input type="hidden" name="id" value="{{ ingredient.id }}" />
+                            <input type="submit" value="Remove">
+                        </form>                
+                    </div> 
+                </td>
+            </tr>
+
+      
+            {% endfor %}
+        </table>         
+    </div>      
 </div>

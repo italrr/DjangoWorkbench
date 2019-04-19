@@ -25,3 +25,35 @@
     width: 100%;
     display: flex;
 }
+
+
+/* CREATE INGREDIENT */
+.wb-ing-create-body {
+    min-width: 300px;
+}
+
+.wb-ing-create-form{
+    max-width: 300px;
+    margin-bottom: 16px;
+}
+
+.wb-ing-success-msg {
+    color: green;
+}
+
+.wb-ing-failure-msg {
+    color: red;
+}
+
+
+/* LIST */
+table, th, td {
+    border: 1px solid black;
+    flex:1;
+}
+
+.wb-ing-table {
+    max-height: 500px;
+    overflow:auto;
+    display: flex;
+}
