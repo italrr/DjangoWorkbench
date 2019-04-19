@@ -136,14 +136,14 @@ function buildGrid(width, height, pixel_size = 32, interact = true){
     },
     // so, to check wether the formula is valid we'll do a simple heuristic
     // of comparing each slot's val and dist
-    checkFormula: function(formula, currentFormula = this.getCurrentFormula()){
-        if(currentFormula.total != formula.total){
+    checkFormula: function(formula, currentFormula = this.getCurrentFormula().formula){
+        if(currentFormula.length != formula.length){
             return false;
         }
         for(let i = 0; i < currentFormula.length; ++i){
             const cf = currentFormula[i];
             const f = formula[i];
-            if(this.checkDistances(cf.dist, f.dist) || cf.val != f.val){
+            if(!this.checkDistances(cf.dist, f.dist) || cf.val != f.val){
                 return false;
             }
         }

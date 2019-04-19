@@ -5,6 +5,10 @@
     display: flex;
 }
 
+.wb-craft-main-left {
+    display: block;
+}
+
 .wb-craft-left-bar {
     flex: 0.75;
     border-right: 1px solid black;
@@ -25,3 +29,71 @@
     width: 100%;
     display: flex;
 }
+
+.wb-craft-create-topbar-incremt {
+    margin-top:3px;
+    margin-right: 2px;
+    max-width:60px;
+    display: block;
+}
+
+.wb-craft-create-topbar-buttons {
+    width: 100%;
+    margin-top: 4px;
+    display:flex;
+}
+
+.wb-craft-success-msg {
+    color: green;
+    font-size: 1.2em;
+    margin-top:8px;
+    font-weight: bold;
+    
+}
+
+.wb-craft-failure-msg {
+    color: red;
+    font-size: 1.2em;
+    margin-top:8px;
+    font-weight: bold;
+}
+
+@keyframes wb-craft-anim-shake {
+    0% {
+        transform: translate(-25px, 0px)
+        
+    }
+
+    50% {
+        transform: translate(25px, 0px)
+    }
+
+    100% {
+        transform: translate(-25px, 0px)
+    }
+}
+
+.wb-craft-anim-failure {
+    animation-duration: 0.1s;
+    animation-name: wb-craft-anim-shake;
+  }
+  
+  @keyframes wb-craft-anim-expand {
+    0% {
+        transform: scale(1, 1) translate(0px, -10px);
+    }
+
+    50% {
+        transform: scale(1.2, 1.2) translate(0px, -25px);
+    }
+
+    100% {
+        transform: scale(1, 1) translate(0px, 0px);
+    }
+}
+
+.wb-craft-anim-success {
+    animation-duration: 0.1s;
+    animation-name: wb-craft-anim-expand;
+  }
+  

@@ -15,4 +15,6 @@ urlpatterns = [
     path('recipes/delete', views.DeleteRecipe, name='DeleteRecipe'),
     # CRAFT
     path('craft/', views.ViewCraft, name='ViewCraft'),
+    path('craft/create', views.CreateCraft, name='CreateCraft'),
+    path('craft/getAll', views.GetAllCrafts, name='GetAllCrafts'),
 ]

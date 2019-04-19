@@ -1,0 +1,185 @@
+
+{% block currentscript %}
+<script>
+
+
+    /*
+        Because of the complex nature of this widget, I'll be doing
+        some stuff directly with javascript throughout this view
+    */
+
+    // dirty fix to wait for dom...
+    // can be better
+    const gridWidth = 4;
+    const gridHeight = 4;       
+    let recipes = [];  
+    const grid = buildGrid(gridWidth, gridHeight, 128);
+    setTimeout(function(dwidth, dheight){
+        const div = document.getElementById('CraftCreateLeftBar')
+        grid.attach(div);
+        grid.init();
+        grid.setFontSize("1.0em");
+    }, 100);
+
+    // fetch ingredients and populate list
+    function fetchIngredients(){
+        const http = new XMLHttpRequest();
+        http.open("GET", '/workbench/ingredients/getAll');
+        http.send();
+        http.onreadystatechange=(e)=>{
+            const select = document.getElementById('CraftCreateIngredient');                
+            json = JSON.parse(http.responseText);
+            if(!select || !json){
+                console.log("No ingredients")
+                return;
+            }
+            for(let i = 0; i < json.length; ++i){
+                select.options[i] = new Option(json[i].name, json[i].id);
+            } 
+            grid.setSelector(json[0].name, json[0].id);
+        }
+    }
+
+    function onClear(){
+        const messageSuccess = document.getElementById('CraftCreateMessageSuccess');
+        const messageFailure = document.getElementById('CraftCreateMessageError');
+        messageSuccess.innerHTML = "";
+        messageFailure.innerHTML = "";            
+        grid.clear();
+    }
+
+    // Since we're by-passing django's forms to make this post request
+    // we'll be getting manually the csrftoken from the cookies 
+    function getCSRFToken() {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                if (cookie.substring(0, 10) == ('csrftoken' + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(10));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function onIngredientChange(){
+        const select = document.getElementById('CraftCreateIngredient');
+        grid.setSelector(select.options[select.options.selectedIndex].innerHTML, select.value);            
+    }
+
+    function onWidthChange(v){
+        const input = document.getElementById('CraftCreateWidthChange');
+        grid.resize(parseInt(input.value), grid.height);
+    }
+
+    function onHeightChange(v){
+        const input = document.getElementById('CraftCreateHeightChange');
+        grid.resize(grid.width, parseInt(input.value));
+    }        
+
+
+    function fetchRecipes(){
+        const http = new XMLHttpRequest();
+        http.open("GET", '/workbench/recipes/getAll');
+        http.send();
+        http.onreadystatechange=(e)=>{
+            json = JSON.parse(http.responseText);
+            if(!json){
+                console.log("No recipes");
+                return;
+            }
+            recipes = json;
+        }
+    }
+
+    function onErrorAnimation (){
+        const CraftMainBody = document.getElementById('CraftMainBody');         
+        CraftMainBody.className = 'wb-craft-anim-failure wb-craft-main-left';
+        setTimeout(function(){
+            CraftMainBody.className = 'wb-craft-main-left';
+        }, 200);        
+    }
+
+    function onSuccessAnimation (){
+        const CraftMainBody = document.getElementById('CraftMainBody');         
+        CraftMainBody.className = 'wb-craft-anim-success wb-craft-main-left';
+        setTimeout(function(){
+            CraftMainBody.className = 'wb-craft-main-left';
+        }, 200);        
+    }
+
+    function clearMessages(){
+        const messageSuccess = document.getElementById('CraftCreateMessageSuccess');
+        const messageFailure = document.getElementById('CraftCreateMessageError');    
+        messageSuccess.innerHTML = ''; 
+        messageFailure.innerHTML = '';
+    }
+    
+    function onCraft(){
+        const messageSuccess = document.getElementById('CraftCreateMessageSuccess');
+        const messageFailure = document.getElementById('CraftCreateMessageError');   
+        clearMessages();
+        const cf = grid.getCurrentFormula();
+        if(cf.total == 0){
+            CraftCreateMessageError.innerHTML = "Can't craft anything without ingredients.";
+            onErrorAnimation();
+            return;
+        }
+        let recipe = null;
+        for(let i = 0; i < recipes.length; ++i){
+            if(grid.checkFormula(recipes[i].slots)){
+                recipe = recipes[i];
+                break;
+            }
+        }
+        if(recipe != null){
+            messageSuccess.innerHTML = "Succesfull crafted a '"+recipe.name+"'!";
+            onSuccessAnimation();
+        }else{
+            CraftCreateMessageError.innerHTML = "That didn't craft anything...";
+            onErrorAnimation();
+        }
+        grid.clear();
+    }
+
+    fetchIngredients();
+
+    fetchRecipes();   
+
+
+</script>
+{% endblock %}
+
+<div id="CraftMainBody" class="wb-craft-main-left">
+    <!-- TOP BAR -->
+    <div class="wb-craft-create-topbar">
+        <div style="margin:8px 0px;">
+            <div>Ingredient</div>
+            <select onchange="onIngredientChange()" id="CraftCreateIngredient"></select>
+        </div>   
+        <div style="display:flex; flex-direction: row; margin:8px 0px;">
+            <div class="wb-craft-create-topbar-incremt">
+                <span>Width</span>
+                <input id="CraftCreateWidthChange" onchange="onWidthChange()" style="max-width:50px;" type="number" step="1" value="4" min="1">
+            </div> 
+            <div class="wb-craft-create-topbar-incremt">
+                <span>Height</span>
+                <input id="CraftCreateHeightChange" onchange="onHeightChange()" style="max-width:50px;" type="number" step="1" value="4" min="1">
+            </div>
+            <div class="wb-craft-create-topbar-buttons">
+                <div style="flex:1;"></div>
+                <button style="margin-right:2px;" onclick="onCraft()">Craft</button>
+                <button onclick="onClear()">Clear</button>
+            </div>                                
+        </div>                          
+        
+    </div>
+    <!-- GRID -->
+    <div id="CraftCreateLeftBar"></div>
+    <div class="wb-craft-success-msg" id="CraftCreateMessageSuccess"></div>
+    <div class="wb-craft-failure-msg" id="CraftCreateMessageError"></div>
+
+</div>

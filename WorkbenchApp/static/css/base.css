@@ -49,3 +49,8 @@ html, body {
     line-height: 100px;
     font-weight:bold;
 }
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}

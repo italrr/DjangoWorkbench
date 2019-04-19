@@ -6,7 +6,7 @@ from django.db import transaction
 
 import json
 
-from .models import Ingredient, RecipeIngredient, Recipe
+from .models import Ingredient, RecipeIngredient, Recipe, Inventory
 
 from .forms import IngredientCreateForm, IngredientDeleteForm
 
@@ -111,9 +111,26 @@ def DeleteRecipe(request):
         return HttpResponse("SUCCESS!")
 
 
-### RECIPES
+### CRAFT
 
 
 def ViewCraft(request):
+    context = {
+        list: Inventory.objects.all()
+    }
+    return render(request, 'craft/craft.html', context)
 
-    return render(request, 'craft/craft.html')
+def CreateCraft(request):
+    obj = json.loads(request.body.decode('utf-8'))
+    recipe = Recipe.objects.get(id=obj['id'])
+    invt = Inventory.objects.get(recipe=recipe)
+    if not invt.exists():
+        invt = Inventory(recipe=recipe, name=obj['name'], amount=1)
+    else:
+        invt.amount += 1
+        
+    invt.save()
+    return HttpResponseRedirect('/workbench/craft')
+
+def GetAllCrafts(request):
+    return JsonResponse(list(Inventory.objects.all().values()), safe=False)
