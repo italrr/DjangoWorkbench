@@ -1,0 +1,38 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block title %}Django Workbench Craft{% endblock %}
+
+{% block currentstyle %}
+    <link rel="stylesheet" href="{% static 'css/craft.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="wb-craft-main">
+        <!-- CRAFT SECTION -->
+        <div class="wb-craft-left-bar">
+            <!-- SECTION TITLE -->
+            <div class="wb-craft-section-title">
+                <div style="flex:1;"></div>
+                <span>Craft</span>
+                <div style="flex:1;"></div>
+            </div>
+            <div class="wb-craft-inner-section">
+                <div style="flex:1;"></div>
+                <div style="flex:1;"></div>
+            </div>
+        </div>
+        <!-- INVETORY LIST SECTION -->
+        <div class="wb-craft-right-bar">
+            <!-- SECTION TITLE -->
+            <div class="wb-craft-section-title">
+                <div style="flex:1;"></div>
+                <span>Inventory</span>
+                <div style="flex:1;"></div>
+            </div>
+            <div class="wb-craft-inner-section">
+                <div style="flex:1;"></div>
+                <div style="flex:1;"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

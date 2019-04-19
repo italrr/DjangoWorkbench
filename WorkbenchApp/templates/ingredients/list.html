@@ -10,14 +10,12 @@
     <div>
         <table class="wb-ing-table">                
             <tr>
-                <th>Display Name</th>
-                <th>Type</th> 
+                <th>Name</th>
                 <th>Action</th>
             </tr>            
             {% for ingredient in list %}
             <tr>
                 <td><span>{{ ingredient.name }}</span></td>
-                <td> <span>{{ ingredient.type }}</span></td> 
                 <td>
                     <div style="margin:2em;">
                         <form action="/workbench/ingredients/delete" method="post">

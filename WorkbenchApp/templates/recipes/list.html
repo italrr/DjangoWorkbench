@@ -1,0 +1,86 @@
+{% block currentscript %}
+    <script>
+
+
+        /*
+            Because of the complex nature of this widget, I'll be doing
+            some stuff directly with javascript throughout this view
+        */
+
+        function buildRecipeItemList(json){
+            const div = document.getElementById('RecipeListContainer');
+
+            // clear container
+            while (div.firstChild) {
+                div.removeChild(div.firstChild);
+            }            
+            
+            // fetch ingredients and populate list
+            function onDelete(id){
+                const http = new XMLHttpRequest();
+                http.open("POST", '/workbench/recipes/delete');
+                http.setRequestHeader("X-CSRFToken", getCSRFToken());
+
+                http.send(JSON.stringify({id:id}));
+                http.onreadystatechange=(e)=>{
+                    fetchRecipes();
+                }
+            }
+
+            const build = function(json){
+                const recipe = document.createElement("div");
+                recipe.className = 'wb-reci-list-item';
+                const title = document.createElement("span");
+                const grid  = document.createElement("div");
+                const deleteButton  = document.createElement("input");
+                deleteButton.onclick = function(){
+                    onDelete(json.id);
+                };
+                deleteButton.type = "button";
+                deleteButton.value = "Remove";
+                deleteButton.style.display = "block";
+                deleteButton.style.marginTop = "4px";
+                recipe.appendChild(title);
+                recipe.appendChild(grid);                
+                recipe.appendChild(deleteButton);                
+                title.innerHTML = json.name;
+                const gridObj = buildGrid(4, 4, 32, false);
+                gridObj.attach(grid);
+                gridObj.init();
+                gridObj.loadFormula(json.slots);
+                gridObj.setFontSize("0.55em");               
+                return recipe;
+            };
+
+            for(let i = 0; i < json.length; ++i){
+                div.appendChild(build(json[i]));
+            }
+        }
+
+
+        // fetch ingredients and populate list
+        function fetchRecipes(){
+            const http = new XMLHttpRequest();
+            http.open("GET", '/workbench/recipes/getAll');
+            http.send();
+            http.onreadystatechange=(e)=>{
+                json = JSON.parse(http.responseText);
+                if(!json){
+                    console.log("No recipes");
+                    return;
+                }
+                buildRecipeItemList(json);
+            }
+        }
+
+        fetchRecipes();
+
+    </script>
+{% endblock %}
+
+<div style="display:flex;">      
+    <div style="flex:1;"></div>
+    <div id="RecipeListContainer" class="wb-reci-list">
+    </div>
+    <div style="flex:1;"></div>
+</div>

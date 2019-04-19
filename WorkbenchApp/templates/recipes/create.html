@@ -10,7 +10,9 @@
 
         // dirty fix to wait for dom...
         // can be better
-        const grid = buildGrid(4, 4, 72);
+        const gridWidth = 4;
+        const gridHeight = 4;        
+        const grid = buildGrid(gridWidth, gridHeight, 72);
         setTimeout(function(dwidth, dheight){
             const div = document.getElementById('RecipeCreateLeftBar')
             grid.attach(div);
@@ -38,6 +40,10 @@
         }
 
         function onClear(){
+            const messageSuccess = document.getElementById('RecipeCreateMessageSuccess');
+            const messageFailure = document.getElementById('RecipeCreateMessageError');
+            messageSuccess.innerHTML = "";
+            messageFailure.innerHTML = "";            
             grid.clear();
         }
 
@@ -63,7 +69,8 @@
             const getName = document.getElementById('RecipeCreateTitle');
             const messageSuccess = document.getElementById('RecipeCreateMessageSuccess');
             const messageFailure = document.getElementById('RecipeCreateMessageError');
-            console.log(document.cookie)
+            messageSuccess.innerHTML = "";
+            messageFailure.innerHTML = "";
             if(!getName.value || getName.value.length < 1){
                 messageFailure.innerHTML = "Name is too short (>=1)";
                 return;
@@ -76,18 +83,26 @@
             const http = new XMLHttpRequest();
             http.open("POST", '/workbench/recipes/create');
             http.setRequestHeader("X-CSRFToken", getCSRFToken());
-            http.send(JSON.stringify({name: name.innerHTML, recipe: formula}));
+            http.send(JSON.stringify({name: getName.value, recipe: formula}));
             http.onreadystatechange=(e)=>{
-                messageSuccess.innerHTML = "Success!";
+                window.location.reload(false);
             }
         }
 
         function onIngredientChange(){
             const select = document.getElementById('RecipeCreateIngredient');
-            grid.setSelector(select.options[select.options.selectedIndex].innerHTML, select.value);
-
-            
+            grid.setSelector(select.options[select.options.selectedIndex].innerHTML, select.value);            
         }
+
+        function onWidthChange(v){
+            const input = document.getElementById('RecipeCreateWidthChange');
+            grid.resize(parseInt(input.value), grid.height);
+        }
+
+        function onHeightChange(v){
+            const input = document.getElementById('RecipeCreateHeightChange');
+            grid.resize(grid.width, parseInt(input.value));
+        }        
 
         fetchIngredients();
 
@@ -104,15 +119,27 @@
         <div style="margin-top:3px;">
             <div>Ingredient</div>
             <select onchange="onIngredientChange()" id="RecipeCreateIngredient"></select>
-        </div>        
-        <div class="wb-reci-create-topbar-buttons">
-            <div style="flex:1;"></div>
-            <button onclick="onCreate()">Create</button>
-            <button onclick="onClear()">Clear</button>
-        </div>
+        </div>   
+        <div style="display:flex; flex-direction: row;">
+            <div class="wb-reci-create-topbar-incremt">
+                <span>Width</span>
+                <input id="RecipeCreateWidthChange" onchange="onWidthChange()" style="max-width:50px;" type="number" step="1" value="4" min="1">
+            </div> 
+            <div class="wb-reci-create-topbar-incremt">
+                <span>Height</span>
+                <input id="RecipeCreateHeightChange" onchange="onHeightChange()" style="max-width:50px;" type="number" step="1" value="4" min="1">
+            </div>
+            <div class="wb-reci-create-topbar-buttons">
+                <div style="flex:1;"></div>
+                <button style="margin-right:2px;" onclick="onCreate()">Create</button>
+                <button onclick="onClear()">Clear</button>
+            </div>                                
+        </div>                          
+        
     </div>
     <!-- GRID -->
     <div id="RecipeCreateLeftBar"></div>
     <div class="wb-reci-success-msg" id="RecipeCreateMessageSuccess"></div>
     <div class="wb-reci-failure-msg" id="RecipeCreateMessageError"></div>
+   
 </div>

@@ -52,5 +52,40 @@
 
 .wb-reci-create-topbar-buttons {
     width: 100%;
+    margin-top: 4px;
     display:flex;
+}
+
+.wb-reci-create-topbar-incremt {
+    margin-top:3px;
+    margin-right: 2px;
+    max-width:60px;
+    display: block;
+}
+
+
+/* LIST */
+table, th, td {
+    border: 1px solid black;
+    flex:1;
+}
+
+.wb-reci-table {
+    max-height: 500px;
+    overflow:auto;
+    display: flex;
+}
+
+.wb-reci-list {
+    display: block;
+    max-width: 50%;
+    max-height: 60%;
+    min-width: 300px;
+    min-height: 300px;
+    overflow-y: auto;
+}
+
+.wb-reci-list-item {
+    display: inline-block;
+    margin: 8px;
 }
