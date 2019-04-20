@@ -29,7 +29,7 @@ function buildGrid(width, height, pixel_size = 32, interact = true){
     },
     grid: grid,
     interact,
-    id: Math.round(Math.random() * randomSeedInit + (++lastId)),
+    id: ++lastId,
     // warning this clears the grid
     resize: function(width, height){
         this.clear();
@@ -64,7 +64,7 @@ function buildGrid(width, height, pixel_size = 32, interact = true){
         }
     },
     getIndexFromCoors: function(x, y){
-        return x + y * this.height;
+        return x + y * this.width;
     },
     getDistance: function(x1 = 0, y1 = 0, x2 = 0, y2 = 0){
         return {
@@ -78,24 +78,28 @@ function buildGrid(width, height, pixel_size = 32, interact = true){
             return;
         }        
         const maxDist = {x: 0, y: 0}
+        const path = []
+        const current = {x:0,  y: 0}
         for(let i = 0; i < formula.length; ++i){
             const a = formula[i];
-            const current = {x:0,  y: 0}
-            for(let j = 0; j < formula.length; ++j){
-                const b = formula[j];
-                if(a == b) continue;
-                current.x += b.dist.x 
-                current.y += b.dist.y
-
-                if(maxDist.x < current.x){
-                    maxDist.x = current.x;
+            current.x += a.dist.x;
+            current.y += a.dist.y;
+            path.push(Object.assign({}, current))
+        }
+        for(let i = 0; i < path.length; ++i){
+            const a = path[i]
+            for(let j = 0; j < path.length; ++j){
+                const b = path[j]
+                const dist = this.getDistance(b.x, b.y, a.x, a.y);
+                if(dist.x > maxDist.x){
+                    maxDist.x = dist.x;
                 }
-                if(maxDist.y < current.y){
-                    maxDist.y = current.y;
-                }
+                if(dist.y > maxDist.y){
+                    maxDist.y = dist.y;
+                }                
             }
         }
-        // first block
+        // accounting for first block
         ++maxDist.x;
         ++maxDist.y;
         return maxDist;
@@ -157,7 +161,6 @@ function buildGrid(width, height, pixel_size = 32, interact = true){
             return;
         }
         const maxDist = this.getMaxDistance(formula);
-        console.log(maxDist)
         if(this.width < maxDist.x || this.height < maxDist.y){
             this.resize(maxDist.x, maxDist.y);
         }
@@ -182,7 +185,7 @@ function buildGrid(width, height, pixel_size = 32, interact = true){
             if(start.y >= this.height){
                 bias.y -= start.y
             }            
-        }     
+        }   
         start = {x: bias.x, y: bias.y}
         for(let i = 0; i < formula.length; ++i){
             let form = formula[i];
@@ -247,7 +250,7 @@ function buildGrid(width, height, pixel_size = 32, interact = true){
     },
     clear: function() {
         for(let i = 0; i < this.total; ++i){
-            grid[i] = {val: -1, name: '&nbsp;', index: i};
+            this.grid[i] = {val: -1, name: '&nbsp;', index: i};
         }
         this.clean();
         this.rerender();

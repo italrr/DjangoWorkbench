@@ -13,7 +13,7 @@ urlpatterns = [
     path('recipes/create', views.CreateRecipe, name='CreateRecipe'),
     path('recipes/getAll', views.GetAllRecipes, name='GetAllRecipes'),
     path('recipes/delete', views.DeleteRecipe, name='DeleteRecipe'),
-    # CRAFT
+    # Craft
     path('craft/', views.ViewCraft, name='ViewCraft'),
     path('craft/create', views.CreateCraft, name='CreateCraft'),
     path('craft/getAll', views.GetAllCrafts, name='GetAllCrafts'),

@@ -12,7 +12,10 @@ from .forms import IngredientCreateForm, IngredientDeleteForm
 
 ### HOME
 def index(request):
-    return render(request, 'home/home.html')
+    context = {
+        'list': Inventory.objects.all()
+    }    
+    return render(request, 'home/home.html', context)
 
 ### INGREDIENTS
 def ViewIngredients(request):
@@ -116,21 +119,24 @@ def DeleteRecipe(request):
 
 def ViewCraft(request):
     context = {
-        list: Inventory.objects.all()
+        'list': Inventory.objects.all()
     }
+    
     return render(request, 'craft/craft.html', context)
 
 def CreateCraft(request):
     obj = json.loads(request.body.decode('utf-8'))
+
     recipe = Recipe.objects.get(id=obj['id'])
-    invt = Inventory.objects.get(recipe=recipe)
-    if not invt.exists():
-        invt = Inventory(recipe=recipe, name=obj['name'], amount=1)
-    else:
+    try:
+        invt = Inventory.objects.get(recipe=recipe)
         invt.amount += 1
-        
+    except:
+        invt = Inventory(recipe=recipe, name=obj['name'], amount=1)
+
     invt.save()
-    return HttpResponseRedirect('/workbench/craft')
+
+    return HttpResponse("SUCCESS!")
 
 def GetAllCrafts(request):
     return JsonResponse(list(Inventory.objects.all().values()), safe=False)

@@ -23,6 +23,7 @@
     width:100%;
     line-height:80px;
     font-size:1.2em;
+    font-weight:bold;
 }
 
 .wb-craft-inner-section {
@@ -97,3 +98,16 @@
     animation-name: wb-craft-anim-expand;
   }
   
+
+
+.wb-craft-table {
+    max-height: 500px;
+    overflow:auto;
+    display: flex;
+}
+
+/* LIST */
+table, th, td {
+    border: 1px solid black;
+    flex:1;
+}

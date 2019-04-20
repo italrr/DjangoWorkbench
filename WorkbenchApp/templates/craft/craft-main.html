@@ -136,8 +136,24 @@
             }
         }
         if(recipe != null){
-            messageSuccess.innerHTML = "Succesfull crafted a '"+recipe.name+"'!";
+            const http = new XMLHttpRequest();
+            http.open("POST", '/workbench/craft/create');
+            http.setRequestHeader("X-CSRFToken", getCSRFToken());
+            http.send(JSON.stringify({id:recipe.id, name:recipe.name}));
+            http.onreadystatechange=(e)=>{
+                json = JSON.parse(http.responseText);
+                if(!json){
+                    console.log("No recipes");
+                    return;
+                }
+                recipes = json;
+            }
+
+            messageSuccess.innerHTML = "Succesfully crafted a '"+recipe.name+"'!";
             onSuccessAnimation();
+            setTimeout(function(){
+                window.location.reload(false);
+            }, 1200)
         }else{
             CraftCreateMessageError.innerHTML = "That didn't craft anything...";
             onErrorAnimation();

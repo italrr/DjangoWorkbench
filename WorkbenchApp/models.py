@@ -15,6 +15,6 @@ class RecipeIngredient(models.Model):
     order = models.IntegerField(default=0)
 
 class Inventory(models.Model):
-    Recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, unique=True)
+    recipe = models.OneToOneField(Recipe, on_delete=models.CASCADE, unique=True)
     name = models.CharField(max_length=100)
     amount = models.IntegerField(default=0)    
