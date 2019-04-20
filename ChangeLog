@@ -1,0 +1,11 @@
+CHANGES
+=======
+
+* Added procfile
+* Finished craft & invetory. General clean. Added some animations
+* Finished craft
+* Created recipes section. Made some fundamental changes to how the grid & recipes work
+* Finished grid system
+* Finished Ingredients section, started working with grid system
+* Added Ingredients view
+* First commit

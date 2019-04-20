@@ -1,0 +1,6 @@
+include README.md
+include db.sqlite3
+include Procfile
+include manage.py
+recursive-include Workbench *
+recursive-include WorkbenchApp *
